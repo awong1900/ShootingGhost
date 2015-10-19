@@ -19,5 +19,6 @@ void setup() {
 void loop() {
   if (digitalRead(left_button) == HIGH || digitalRead(right_button) == HIGH) {
     step.ChangeStepDir();
+    delay(100);
   }
 }

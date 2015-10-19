@@ -4,7 +4,7 @@ bool MICROSTEP_DRIVER_2H320::Begin(int pin_en, int pin_dir, int pin_pul) {
   step_en = pin_en;
   step_dir = pin_dir;
   step_pul = pin_pul;
-  step_freq = 1000;
+  step_freq = 5000;
 
   pinMode(step_en, OUTPUT);
   pinMode(step_dir, OUTPUT);
@@ -27,8 +27,9 @@ bool MICROSTEP_DRIVER_2H320::ChangeStepDir() {
   if (dir == CLOCKWISE)
     digitalWrite(step_dir, COUNTERCLOCKWISE);
   else
-  digitalWrite(step_dir, CLOCKWISE);
+    digitalWrite(step_dir, CLOCKWISE);
 
+  StepStop();
   StepStart();
 
   return true;
@@ -56,12 +57,16 @@ bool MICROSTEP_DRIVER_2H320::SetStepSpeed(int hz) {
 }
 
 bool MICROSTEP_DRIVER_2H320::StepStart() {
-  //todo lowly start
-  tone(step_pul, step_freq);
+  SetStepOnOff(true);
+  //lowly start
+  for (int i=4; i>0; i--) {
+    tone(step_pul, step_freq/i);
+    delay(10);
+  }
   return true;
 };
 
 bool MICROSTEP_DRIVER_2H320::StepStop() {
-  SetStepOnOff(true);
+  SetStepOnOff(false);
   return true;
 }
